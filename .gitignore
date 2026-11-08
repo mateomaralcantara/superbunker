@@ -55,3 +55,6 @@ SUBIR-SUPERBUNKER-A-GITHUB.ps1
 *.tmp
 .git-nested-backup-*/
 **/.git-nested-backup-*/
+
+# Redis dump (artefacto local)
+*.rdb
