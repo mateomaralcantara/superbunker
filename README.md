@@ -54,11 +54,15 @@ pnpm dev
 - API: http://localhost:4000/api (health en `/api/health`)
 - Web: http://localhost:3000
 
-Los **workers** se levantan aparte:
+`pnpm dev` levanta solo **API + Web** (más ligero de RAM). Los **workers** se
+levantan aparte, y solo hacen falta para que los labs pasen de `PENDING` a
+`RUNNING`:
 
 ```bash
-pnpm --filter @supbunker/workers dev
+pnpm dev:workers
 ```
+
+Si quieres los tres a la vez (API + Web + Workers): `pnpm dev:all`.
 
 ## Usuarios demo (tras `pnpm db:seed`)
 
@@ -74,6 +78,8 @@ pnpm --filter @supbunker/workers dev
 | Comando | Qué hace |
 |---|---|
 | `pnpm dev` | API + Web en paralelo (compila `shared` primero) |
+| `pnpm dev:workers` | Solo los workers (para provisioning/grading de labs) |
+| `pnpm dev:all` | API + Web + Workers a la vez |
 | `pnpm build` | Build de producción de todas las apps |
 | `pnpm typecheck` | Chequeo de tipos en todo el workspace |
 | `pnpm lint` | Lint en todo el workspace |

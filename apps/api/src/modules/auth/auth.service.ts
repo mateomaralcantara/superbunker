@@ -9,6 +9,14 @@ import { RegisterSchema, LoginSchema } from "@supbunker/shared";
 export class AuthService {
   constructor(private prisma: PrismaService, private jwt: JwtService, private audit: AuditService) {}
 
+  // Hash de relleno para comparar en tiempo constante cuando el usuario no existe,
+  // y así no filtrar por tiempo qué correos están registrados.
+  private dummyHash: string | null = null;
+  private async getDummyHash(): Promise<string> {
+    if (!this.dummyHash) this.dummyHash = await argon2.hash("invalid-placeholder-password");
+    return this.dummyHash;
+  }
+
   async register(payload: unknown, req: any) {
     const data = RegisterSchema.parse(payload);
     const passwordHash = await argon2.hash(data.password);
@@ -40,9 +48,20 @@ export class AuthService {
       include: { roles: true }
     });
 
-    if (!user) throw new UnauthorizedException("Credenciales inválidas");
-    const ok = await argon2.verify(user.passwordHash, data.password);
-    if (!ok) throw new UnauthorizedException("Credenciales inválidas");
+    // Siempre se ejecuta una verificación argon2 (exista el usuario o no).
+    const hash = user?.passwordHash ?? (await this.getDummyHash());
+    const ok = await argon2.verify(hash, data.password).catch(() => false);
+
+    if (!user || !ok) {
+      await this.audit.log({
+        actorId: user?.id,
+        action: "AUTH_LOGIN_FAILED",
+        ip: req.ip,
+        ua: req.headers["user-agent"],
+        reason: user ? "bad_password" : "unknown_user"
+      });
+      throw new UnauthorizedException("Credenciales inválidas");
+    }
 
     const token = await this.jwt.signAsync({
       sub: user.id,
