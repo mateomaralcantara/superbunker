@@ -64,6 +64,7 @@ model LabTemplate {
   kind        String
   spec        Json
   createdAt   DateTime @default(now())
+  instances   LabInstance[]
 }
 
 model LabInstance {
