@@ -9,7 +9,9 @@
   },
   "scripts": {
     "build:shared": "pnpm --filter @supbunker/shared build",
-    "dev": "pnpm build:shared && pnpm -r --parallel --filter \"./apps/*\" dev",
+    "dev": "pnpm build:shared && pnpm --parallel --filter @supbunker/api --filter @supbunker/web dev",
+    "dev:all": "pnpm build:shared && pnpm -r --parallel --filter \"./apps/*\" dev",
+    "dev:workers": "pnpm --filter @supbunker/workers dev",
     "build": "pnpm build:shared && pnpm -r --filter \"./apps/*\" build",
     "typecheck": "pnpm build:shared && pnpm -r typecheck",
     "lint": "pnpm -r lint",
