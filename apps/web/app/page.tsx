@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { api, setToken, getToken } from "../src/lib/api";
 
 type Msg = { text: string; kind: "ok" | "err" | "" };
@@ -126,6 +127,9 @@ export default function Home() {
           <span className="eyebrow">Panel de operaciones</span>
           <h1>Laboratorios de seguridad en <em>entorno controlado</em>.</h1>
           <p>Autentícate para ver tus cursos, las plantillas de laboratorio disponibles y lanzar instancias aisladas. Cada acción se audita.</p>
+          <div className="row" style={{ marginTop: 18 }}>
+            <Link href="/dashboard" className="btn btn-primary">Abrir consola →</Link>
+          </div>
         </section>
 
         <div className="grid cols-3">
