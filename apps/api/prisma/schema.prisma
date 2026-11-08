@@ -30,6 +30,14 @@ enum SubmissionStatus {
   GRADED
 }
 
+enum ScanStatus {
+  PENDING
+  RUNNING
+  DONE
+  FAILED
+  DENIED
+}
+
 model User {
   id           String   @id @default(uuid())
   email        String   @unique
@@ -111,4 +119,20 @@ model AuditLog {
   createdAt DateTime @default(now())
 
   @@index([action, createdAt])
+}
+
+model ScanJob {
+  id         String     @id @default(uuid())
+  userId     String
+  target     String
+  ports      String
+  kind       String     @default("tcp-connect")
+  status     ScanStatus @default(PENDING)
+  result     Json       @default("{}")
+  resultHash String?
+  reason     String?
+  createdAt  DateTime   @default(now())
+  finishedAt DateTime?
+
+  @@index([userId, createdAt])
 }

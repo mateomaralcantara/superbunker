@@ -16,7 +16,10 @@ const EnvSchema = z.object({
   // Rate limiting (ventana en segundos + límites por IP).
   THROTTLE_TTL: z.coerce.number().int().positive().default(60),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(120),
-  AUTH_THROTTLE_LIMIT: z.coerce.number().int().positive().default(10)
+  AUTH_THROTTLE_LIMIT: z.coerce.number().int().positive().default(10),
+  // Alcance de escaneo autorizado (CIDRs separados por coma). Deny-by-default:
+  // por defecto solo la propia máquina. Añade aquí las redes de tu laboratorio.
+  SCAN_ALLOWLIST: z.string().default("127.0.0.1/32")
 });
 
 export type Env = z.infer<typeof EnvSchema>;

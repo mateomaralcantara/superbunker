@@ -8,6 +8,7 @@ import { HealthModule } from "./health/health.module";
 import { CoursesModule } from "./courses/courses.module";
 import { LabsModule } from "./labs/labs.module";
 import { SubmissionsModule } from "./submissions/submissions.module";
+import { ScanModule } from "./scan/scan.module";
 import { loadEnv } from "../config/env";
 
 const env = loadEnv();
@@ -21,7 +22,8 @@ const env = loadEnv();
     HealthModule,
     CoursesModule,
     LabsModule,
-    SubmissionsModule
+    SubmissionsModule,
+    ScanModule
   ],
   providers: [{ provide: APP_GUARD, useClass: ThrottlerGuard }]
 })

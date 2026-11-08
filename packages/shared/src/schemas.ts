@@ -32,3 +32,8 @@ export const CreateSubmissionSchema = z.object({
   assignmentId: z.string().uuid(),
   content: z.string().min(1)
 });
+
+export const CreateScanSchema = z.object({
+  target: z.string().min(1).max(255),
+  ports: z.string().min(1).max(400).default("22,80,443,3000,4000,5432,6379")
+});
