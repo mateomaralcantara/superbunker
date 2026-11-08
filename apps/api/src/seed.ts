@@ -65,9 +65,16 @@ async function main() {
   console.log("LabTemplate:", tpl.id);
   console.log("Assignment:", assignment.id);
 
-  // Create one initial lab instance for the student (optional)
+  // Lab de ejemplo ya aprovisionado (RUNNING), para que el panel no arranque vacío.
+  // No se deja en PENDING porque el seed no encola un job: lo haría el worker al
+  // crear la instancia desde la API, no aquí.
   await prisma.labInstance.create({
-    data: { templateId: tpl.id, userId: student.id, status: "PENDING" }
+    data: {
+      templateId: tpl.id,
+      userId: student.id,
+      status: "RUNNING",
+      metadata: { endpoint: "internal://lab/seed-demo", seeded: true }
+    }
   });
 }
 
