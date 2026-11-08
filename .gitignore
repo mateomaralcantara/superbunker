@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Builds / caches
+.next/
+dist/
+build/
+.turbo/
+coverage/
+*.tsbuildinfo
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Local SuperBunker artifacts
+.superbunker-backups/
+.superbunker-tools/
+.superbunker-quality/
+.istem-audit/
+
+# Local repair/audit scripts
+audit-istem-cyber-platform*.ps1
+reparar-superbunker-*.ps1
+corregir-superbunker-*.ps1
+RECUPERAR-PNPM-Y-EJECUTAR-10-10.ps1
+INSTALAR-O-ARREGLAR-PNPM-PERMANENTE.ps1
+LLEVAR-SUPERBUNKER-A-10-DE-10*.ps1
+SUBIR-SUPERBUNKER-A-GITHUB.ps1
+
+# Temporary backups
+*.backup-*
+*.bak
+*.tmp
+.git-nested-backup-*/
+**/.git-nested-backup-*/

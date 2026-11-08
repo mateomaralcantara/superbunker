@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  RANGE_ADMIN
+  PROGRAM_DIRECTOR
+  COMPLIANCE
+  ORG_ADMIN
+}
+
+enum LabStatus {
+  PENDING
+  PROVISIONING
+  RUNNING
+  EXPIRED
+  FAILED
+}
+
+enum SubmissionStatus {
+  DRAFT
+  SUBMITTED
+  GRADED
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  roles        UserRole[]
+}
+
+model UserRole {
+  id     String @id @default(uuid())
+  userId String
+  role   Role
+  scope  String?
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, role])
+}
+
+model Course {
+  id        String   @id @default(uuid())
+  title     String
+  level     String
+  tags      String[]
+  createdAt DateTime @default(now())
+}
+
+model LabTemplate {
+  id          String   @id @default(uuid())
+  name        String
+  description String   @default("")
+  kind        String
+  spec        Json
+  createdAt   DateTime @default(now())
+}
+
+model LabInstance {
+  id          String    @id @default(uuid())
+  templateId  String
+  userId      String
+  status      LabStatus @default(PENDING)
+  createdAt   DateTime  @default(now())
+  expiresAt   DateTime?
+  metadata    Json      @default("{}")
+  template    LabTemplate @relation(fields: [templateId], references: [id])
+
+  @@index([userId, createdAt])
+}
+
+model Assignment {
+  id        String   @id @default(uuid())
+  title     String
+  courseId  String
+  createdAt DateTime @default(now())
+}
+
+model Submission {
+  id           String           @id @default(uuid())
+  assignmentId String
+  userId       String
+  content      String
+  status       SubmissionStatus @default(SUBMITTED)
+  score        Int              @default(0)
+  feedback     String           @default("")
+  createdAt    DateTime         @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  actorId   String?
+  action    String
+  target    String?
+  ip        String?
+  ua        String?
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([action, createdAt])
+}
