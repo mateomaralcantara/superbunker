@@ -8,7 +8,9 @@ const { PrismaClient } = require("@prisma/client") as typeof import("@prisma/cli
 type PrismaClient = import("@prisma/client").PrismaClient;
 
 const prisma = new PrismaClient();
-const redis = new Redis(process.env.REDIS_URL ?? "redis://localhost:6379");
+const redis = new Redis(process.env.REDIS_URL ?? "redis://localhost:6379", {
+  maxRetriesPerRequest: null
+});
 
 export const queues = {
   provision: new Queue("provision-lab", { connection: redis }),

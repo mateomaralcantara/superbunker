@@ -39,10 +39,10 @@ cp .env.example .env
 #   edita .env y genera un JWT_SECRET real:
 #   node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 
-# 3. Infraestructura local (Postgres, Redis, ...)
+# 3. Infraestructura local (Postgres + Redis) — requiere Docker Desktop abierto
 pnpm infra:up
 
-# 4. Base de datos: generar cliente, migrar y sembrar datos demo
+# 4. Base de datos: generar cliente, aplicar migraciones y sembrar datos demo
 pnpm prisma:generate
 pnpm prisma:migrate
 pnpm db:seed
@@ -82,7 +82,14 @@ pnpm --filter @supbunker/workers dev
 
 ## Notas
 
-- `packages/shared` se compila a `dist/` y lo consumen API y Workers; `pnpm dev`
-  y `pnpm build` lo construyen primero automáticamente.
+- Hay **una sola `.env` en la raíz** del repo. Todas las apps la cargan vía
+  `dotenv-cli` (`dotenv -e ../../.env -- ...`), así que no necesitas copias por
+  paquete. Nunca la comitees (está en `.gitignore`).
+- La **API usa el Nest CLI** (`nest start` / `nest build`), no `tsx`, porque
+  NestJS necesita los metadatos de decoradores que emite `tsc` para inyección de
+  dependencias. Los Workers y el seed sí usan `tsx` (no dependen de esos
+  metadatos).
+- `packages/shared` se compila a `dist/` y lo consumen API y Workers; `pnpm dev`,
+  `pnpm build` y `pnpm typecheck` lo construyen primero automáticamente.
 - El directorio `src/app/` en la raíz contiene páginas sueltas de un panel SOC
   que **aún no están integradas** en `apps/web`. Pendiente de integrar o retirar.

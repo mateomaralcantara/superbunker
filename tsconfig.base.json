@@ -13,10 +13,6 @@
     "sourceMap": true,
     "noEmit": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "baseUrl": ".",
-    "paths": {
-      "@supbunker/shared": ["packages/shared/src/index.ts"]
-    }
+    "emitDecoratorMetadata": true
   }
 }
