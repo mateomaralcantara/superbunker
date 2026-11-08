@@ -16,6 +16,15 @@ export async function api<T>(path: string, opts: RequestInit = {}): Promise<T> {
   if (token) headers.set("Authorization", `Bearer ${token}`);
 
   const res = await fetch(`${API}${path}`, { ...opts, headers });
-  if (!res.ok) throw new Error(`API error ${res.status}`);
+  if (!res.ok) {
+    let msg = `API error ${res.status}`;
+    try {
+      const j = await res.json();
+      if (j?.message) msg = typeof j.message === "string" ? j.message : JSON.stringify(j.message);
+    } catch {}
+    const e = new Error(msg) as Error & { status?: number };
+    e.status = res.status;
+    throw e;
+  }
   return res.json() as Promise<T>;
 }
